@@ -1,0 +1,4 @@
+PySimpleGUI==5.0.4
+py3-tts==3.5
+pyobjc-framework-Speech==9.0.1
+SpeechRecognition==3.10.3
