@@ -12,25 +12,25 @@ def speech_to_text():
         try:
          
         # initialize microphone
-            with sr.Microphone() as source2:
+            with sr.Microphone() as microphone:
              
                 # wait for ambient noise level to be adjusted
-                r.adjust_for_ambient_noise(source2, duration=0.2)
+                r.adjust_for_ambient_noise(microphone, duration=0.2)
              
                 # listen for speech
-                audio2 = r.listen(source2)
+                microphone = r.listen(microphone)
              
                 # use google recognizer to figure out what
                 #was said
-                MyText = r.recognize_google(audio2)
+                MyText = r.recognize_google(microphone)
                 MyText = MyText.lower()
  
                 return(MyText)
              
         except sr.RequestError as e:
-            print("Could not request results; {0}".format(e))
+            print("Error; {0}".format(e))
             break
          
         except sr.UnknownValueError:
-            print("unknown error occurred")
+            print("Error")
             break
