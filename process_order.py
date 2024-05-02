@@ -57,101 +57,115 @@ def take_order(string,stopWords):
     return orderTree
 
 
-def assemble_order(number, numberSize, numberMulti, numberSizedMulti, items, menu ):
+def assemble_order(number, numberSize, numberMulti, numberSizedMulti, items, extras):
     """Retrieve order information from chunks and assemble into summary 
     for output to GUI.
     """
 
-    # Initialize variable
-    order = []
+    # Initialize variables
+    orderList = []
+    extrasList = []
     
     # Single number orders, no size idicator
     for i in range(len(number)):
         numberString = number[i]
-        numberToken = nltk.word_tokenize(numberString)
-        numberEntry = 'MD ' + numberToken[0].capitalize() + ' ' + numberToken[1].capitalize()
-        if numberEntry:
-            order.append(numberEntry)
+        # numberToken = nltk.word_tokenize(numberString)
+        # numberEntry = 'MD ' + numberToken[0].capitalize() + ' ' + numberToken[1].capitalize()
+        # if numberEntry:
+        #     orderList.append(numberEntry)
+        orderList.append(numberString)
 
     # Multi order - first item is amount, second and third are order number
     for i in range(len(numberMulti)):
         multiString = numberMulti[i]
-        multiToken = nltk.word_tokenize(multiString)
-        amount = multiToken[0]                                                                        #first item is amount
-        multiOrderEntry = 'MD ' + multiToken[1].capitalize() + ' ' + multiToken[2].capitalize()       #remaining items cover the order number
+        # multiToken = nltk.word_tokenize(multiString)
+        # amount = multiToken[0]                                                                        #first item is amount
+        # multiOrderEntry = 'MD ' + multiToken[1].capitalize() + ' ' + multiToken[2].capitalize()       #remaining items cover the order number
 
-        # Add appropriate number of orders to the menu
-        if amount == 'one':
-            j = 1
-        elif amount == 'two':
-            j = 2
-        elif amount == 'three':
-            j = 3
-        elif amount == 'four':
-            j = 4
+        # # Add appropriate number of orders to the menu
+        # if amount == 'one':
+        #     j = 1
+        # elif amount == 'two':
+        #     j = 2
+        # elif amount == 'three':
+        #     j = 3
+        # elif amount == 'four':
+        #     j = 4
 
-        # Add orders
-        for i in range(j):
-            order.append(multiOrderEntry)
+        # # Add orders
+        # for i in range(j):
+        #     orderList.append(multiOrderEntry)
+        orderList.append(multiString)
 
     # Sized order - first item is size, second and third are order number
     for i in range(len(numberSize)):
         sizeString = numberSize[i]
-        sizeToken = nltk.word_tokenize(sizeString)
-        size = sizeToken[0]
+        # sizeToken = nltk.word_tokenize(sizeString)
+        # size = sizeToken[0]
         
-        # Get appropriate size signifier
-        if size == 'small':
-            size = 'SM'
-        elif size == 'medium':
-            size = 'MD'
-        elif size == 'large':
-            size = 'LG'
+        # # Get appropriate size signifier
+        # if size == 'small':
+        #     size = 'SM'
+        # elif size == 'medium':
+        #     size = 'MD'
+        # elif size == 'large':
+        #     size = 'LG'
         
-        # Add orders
-        sizeOrderEntry = size + ' ' + sizeToken[1].capitalize() + ' ' + sizeToken[2].capitalize()
-        order.append(sizeOrderEntry)
+        # # Add orders
+        # sizeOrderEntry = size + ' ' + sizeToken[1].capitalize() + ' ' + sizeToken[2].capitalize()
+        # orderList.append(sizeOrderEntry)
+        orderList.append(sizeString)
 
     # Sized multi-orders - first item is number of orders, second item is size, third and fourth are order number
     for i in range(len(numberSizedMulti)):
         sizedMultiString = numberSizedMulti[i]
-        sizedMultiToken = nltk.word_tokenize(sizedMultiString)
-        amount = sizedMultiToken[0]
-        size = sizedMultiToken[1]
+        # sizedMultiToken = nltk.word_tokenize(sizedMultiString)
+        # amount = sizedMultiToken[0]
+        # size = sizedMultiToken[1]
 
-        # Add appropriate number of orders to the menu
-        if amount == 'one':
-            j = 1
-        elif amount == 'two':
-            j = 2
-        elif amount == 'three':
-            j = 3
-        elif amount == 'four':
-            j = 4
+        # # Add appropriate number of orders to the menu
+        # if amount == 'one':
+        #     j = 1
+        # elif amount == 'two':
+        #     j = 2
+        # elif amount == 'three':
+        #     j = 3
+        # elif amount == 'four':
+        #     j = 4
 
-        # Get appropriate size signifier
-        if size == 'small':
-            size = 'SM'
-        elif size == 'medium':
-            size = 'MD'
-        elif size == 'large':
-            size = 'LG'
+        # # Get appropriate size signifier
+        # if size == 'small':
+        #     size = 'SM'
+        # elif size == 'medium':
+        #     size = 'MD'
+        # elif size == 'large':
+        #     size = 'LG'
 
-        # Add orders
-        for i in range(j):
-            sizedMultiOrderEntry = size + ' ' + sizedMultiToken[2].capitalize() + ' ' + sizedMultiToken[3].capitalize()
-            order.append(sizedMultiOrderEntry)
+        # # Add orders
+        # for i in range(j):
+        #     sizedMultiOrderEntry = size + ' ' + sizedMultiToken[2].capitalize() + ' ' + sizedMultiToken[3].capitalize()
+        #     orderList.append(sizedMultiOrderEntry)
+        orderList.append(sizedMultiString)
 
     # Individual items
     for i in range(len(items)):
         item = items[i]
-        order.append(item)
+        orderList.append(item)
 
-    return order
+    # Output extras
+    for i in range(len(extras)):
+        extraString = extras[i]
+        extraToken = nltk.word_tokenize(extraString)
+        for extra in extraToken:
+            extrasList.append(extra)
         
 
 
-def process_order(string, menu):
+    return orderList, extrasList
+        
+
+
+def process_order(string):
     """Function to take order, process with NLTK to determine what user is asking for, and 
     summarize output as list of"""
 
@@ -167,7 +181,6 @@ def process_order(string, menu):
 
     # Receive input string and use NLTK to chunk
     orderTree = take_order(string, stopWords)
-    orderTree.draw()
 
     # See which chunks were present
     orderNumber = get_chunk(orderTree, 'orderNumber')
@@ -178,6 +191,6 @@ def process_order(string, menu):
     items = get_chunk(orderTree,'item')
 
     # Assemble output list of strings
-    orderOutput = assemble_order(orderNumber, orderNumberSize, orderNumberMulti, orderNumberSizedMulti, items, menu)
+    orderOutput, extrasOutput = assemble_order(orderNumber, orderNumberSize, orderNumberMulti, orderNumberSizedMulti, items, extras)
 
-    return orderOutput
+    return orderOutput, extrasOutput

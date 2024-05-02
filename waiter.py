@@ -5,6 +5,7 @@ menu = ["steak","hamburger","chicken"]
 import speech_recognition as sr
 from speech_recognition.recognizers import google, whisper
 import pyttsx3 
+from process_order import process_order
 
 def text_to_speech(text):
     engine = pyttsx3.init()
@@ -71,15 +72,16 @@ def main():
             customer_order = speech_to_text()
             print("You said: ", customer_order)
 
-            parsed_order = customer_order.split()
-            test = [i for i in parsed_order if i in menu]
-            print(len(test))
-            if len(test)==1:
-                waiter_response = "You would like {}, is that right?".format(test[0])
-            elif len(test)==2:
-                waiter_response = "You would like {} and {} is that right?".format(test[0], test[1])
-            elif len(test)==3:
-                waiter_response = "You would like {},{}, and {}, is that right?".format(test[0], test[1], test[2])
+            # parsed_order = customer_order.split()
+            # test = [i for i in parsed_order if i in menu]
+            parsed_order, extras = process_order(customer_order)
+
+            if len(parsed_order)==1:
+                waiter_response = "You would like {}, is that right?".format(parsed_order[0])
+            elif len(parsed_order)==2:
+                waiter_response = "You would like {} and {} is that right?".format(parsed_order[0], parsed_order[1])
+            elif len(parsed_order)==3:
+                waiter_response = "You would like {},{}, and {}, is that right?".format(parsed_order[0], parsed_order[1], parsed_order[2])
             else:
                 waiter_response = "I'm sorry, we don't have that. Please try ordering again"
 
