@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 import time
 
-menu = ["steak","hamburger","chicken"]
+menu = ["steak","hamburger","burger","cheeseburger","chicken","number one","number 1","number two","number 2","number three","number 3"]
 import speech_recognition as sr
 from speech_recognition.recognizers import google, whisper
 import pyttsx3 
@@ -74,7 +74,7 @@ def main():
 
             # parsed_order = customer_order.split()
             # test = [i for i in parsed_order if i in menu]
-            parsed_order, extras = process_order(customer_order)
+            parsed_order = process_order(customer_order,menu)
 
             if len(parsed_order)==1:
                 waiter_response = "You would like {}, is that right?".format(parsed_order[0])
