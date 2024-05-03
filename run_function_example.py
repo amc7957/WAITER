@@ -20,7 +20,6 @@ menu = [
 
 if __name__ =='__main__':
 
-    order = sentence
-    orderOutput, extrasOutput = process_order(order)
-    print(orderOutput)
-    print(extrasOutput)
+    order = speech_to_text()
+    output = process_order(order, menu)
+    print(output)

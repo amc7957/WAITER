@@ -1,11 +1,12 @@
 import PySimpleGUI as sg
 import time
-
-menu = ["steak","hamburger","burger","cheeseburger","chicken","number one","number 1","number two","number 2","number three","number 3"]
+import re
 import speech_recognition as sr
 from speech_recognition.recognizers import google, whisper
 import pyttsx3 
 from process_order import process_order
+
+menu = ["steak","hamburger","burger","cheeseburger","chicken","number one","number 1","number two","number 2","number three","number 3"]
 
 def text_to_speech(text):
     engine = pyttsx3.init()
@@ -35,8 +36,7 @@ def speech_to_text():
             
         except sr.RequestError as e:
             print("Could not request results; {0}".format(e))
-            break
-         
+            break 
         except sr.UnknownValueError:
             print("unknown error occurred")
             break
@@ -47,10 +47,11 @@ def main():
     sg.set_options(element_padding=(10, 10))
     # Define the layout for the menu
     layout = [
-        [sg.Text('Click "Record" when you are ready to order', justification='right')],
-        [sg.Text('1. Steak', justification='right')],
+        [sg.Text('Click "Order" when you are ready to order', justification='center')],
+        [sg.Text('1. Steak', justification='center')],
         [sg.Text('2. Hamburger', justification='center')],
-        [sg.Text('3. Chicken', justification='right')],
+        [sg.Text('3. Chicken', justification='center')],
+        [sg.Text('', key = 'confirmation')], #empty space for order confirmation
         [sg.Button('Order', size=(20, 1))],
         [sg.Button('Exit', size=(20, 1))]
     ]
@@ -72,9 +73,7 @@ def main():
             customer_order = speech_to_text()
             print("You said: ", customer_order)
 
-            # parsed_order = customer_order.split()
-            # test = [i for i in parsed_order if i in menu]
-            parsed_order = process_order(customer_order,menu)
+            parsed_order, orderTree = process_order(customer_order, menu)
 
             if len(parsed_order)==1:
                 waiter_response = "You would like {}, is that right?".format(parsed_order[0])
@@ -88,7 +87,19 @@ def main():
             print("W.A.I.T.E.R: ",waiter_response)
             text_to_speech(str(waiter_response))
 
+            #Clean up order list to display
+            order_confirmation = str(parsed_order)
+
+            regex = re.compile('[^a-zA-Z]')
+            order_confirmation = regex.sub(' ', order_confirmation)
+            display_order =  "Your order: " + order_confirmation
+
+            window['confirmation'].update(display_order)
+
+
             window['Order'].update('Order Again')
+
+            orderTree.draw()
 
         
     # Close the window when the loop exits

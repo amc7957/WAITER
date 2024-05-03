@@ -44,8 +44,6 @@ def take_order(string,stopWords):
     orderNumberMulti: {<CD><NN><CD>}                #'three number ones'
     orderNumberSize: {<NN|JJ><NN><CD>}              #'medium number two'
     orderNumber: {<NN><CD>}                         #'number three'
-    request: {<MD><PRP><VB>?<VB>}                   #'can I get'
-             {<VB><PRP><VB>?<VB>}                   #'let me get'
     extras: {<NN>+<IN><NN>+<CC>?<NN>?}              #'with lettuce, tomato, cheese, and mayo'
     item: {<NN>+}                                   #grabs all remaining items
     """
@@ -144,4 +142,4 @@ def process_order(string,menu):
     # Check if items are on menu
     orderOutput = check_menu(orderList, menu) 
 
-    return orderOutput
+    return orderOutput, orderTree
